@@ -1,6 +1,8 @@
 
 class Test {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        int x = 5;
+        x = x++ - ++x;
+        System.out.println(x);
     }
 }
