@@ -52,7 +52,45 @@ class Test {
 
 ## 3.3 산술연산자
 ### 3.3.1 사칙연산자
-- 아 장쉐친 게임이론 강의 넘 재밌다...
+- 피연산자가 정수형인 경우, 0으로 나눌 수 없다. -> 에러 발생
+- 피연산자가 실수형인 경우, 0으로 나눌 경우 Infinity가 나온다.
+- byte + byte 의 경우 반환값은 int이다. 
+- int * int 결과 최대 int 값인 약 20억을 초과할 경우 오버플로우가 발생하여 음수 정수 값이 나온다. 그러므로 연산 하는 수또는 예상 결과 값이 int 형의 범위를 초과할 경우, 값을 Long으로 변환 후 연산을 해주어야한다. 연산 후 Long 변환하지 않도록 주의한다.
+```java
+class Test {
+    public static void main(String[] args) {
+        int x1 = 1_000_000 * 1_000_000;
+        long x2 = 1_000_000 * 1_000_000L;
+        System.out.println(x1);
+        System.out.println(x2);
+    }
+}
+```
+- char + int 연산의 경우 피연산자가 변수인지 리터럴인지에 따라 형변환 필요여부가 달라진다.
+```java
+class Test {
+    public static void main(String[] args) {
+        // 리터럴 char + int
+        char c1 = 'a' + 1;
+
+        // 변수 char + int
+        char c2 = 'b';
+        char c3 = c2 + 1; // -> 타입 오류 발생
+    }
+}
+```
+- char 형 데이터를 int 와 연산할 수 있음을 활용한 예: 대소문자 변환
+```java
+class Test {
+    public static void main(String[] args) {
+        char c1 = 'a';
+        // char c2 = (char) c1 - 32; // '-' 연산뒤 int 형이 반환되고 int(4byte) -> char(2byte)로 변환시 데이터 손실이 발생하므로 오류
+        char c2 = (char) (c1 - 32) // 명시적 형변환 이므로 오류가 발생하지 않지만, 데이터가 손실될 수 있음.
+        // char -= 32 는 바로 위 코드와 동일하게 동작한다.
+        System.out.println(c2);
+    }
+}
+```
 ### 3.3.2 나머지 연산자
 
 ## 3.4 비교 연산자
