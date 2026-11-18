@@ -3,14 +3,18 @@ import java.util.Scanner;
 
 class Test {
     public static void main(String[] args) {
-        char[] abc = { 'a', 'b', 'c' };
-        char[] num = { '1', '2', '3', '4', '5' };
-        char[] result = new char[10];
+        // 선언
+        int[][] narray0;
 
-        System.arraycopy(abc, 0, result, 0, abc.length);
-        System.arraycopy(num, 0, result, abc.length, num.length);
+        // 생성
+        narray0 = new int[3][4];
 
-        System.out.println(Arrays.toString(num));
-        System.out.println(Arrays.toString(result));
+        // 축약
+        int[][] narray1 = new int[][] { { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 } };
+        int[][] narray2 = { { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 } };
+        int[][] narray3 = new int[3][];
+        narray3[0] = new int[] { 1, 2, 3, 4 };
+        narray3[1] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+        narray3[2] = new int[] { 1, 2, 3, 4, 5, 6 };
     }
 }
