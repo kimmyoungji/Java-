@@ -1,20 +1,25 @@
 import java.util.Arrays;
 import java.util.Scanner;
 
+class Data {
+    int x;
+    int y;
+}
+
 class Test {
     public static void main(String[] args) {
-        // 선언
-        int[][] narray0;
+        Data d = new Data();
+        d.x = 10;
+        d.y = 20;
+        System.out.printf("d.x : %d, d.y : %d %n", d.x, d.y);
+        Data d2 = copy(d);
+        System.out.printf("d2.x: %d, d2.y: %d %n", d2.x, d2.y);
+    }
 
-        // 생성
-        narray0 = new int[3][4];
-
-        // 축약
-        int[][] narray1 = new int[][] { { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 } };
-        int[][] narray2 = { { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 }, { 1, 2, 3, 4 } };
-        int[][] narray3 = new int[3][];
-        narray3[0] = new int[] { 1, 2, 3, 4 };
-        narray3[1] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-        narray3[2] = new int[] { 1, 2, 3, 4, 5, 6 };
+    static Data copy(Data d) {
+        Data nd = new Data();
+        nd.x = d.x;
+        nd.y = d.y;
+        return nd;
     }
 }

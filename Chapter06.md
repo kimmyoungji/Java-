@@ -75,10 +75,146 @@ add(1,2)
 ### 6.3.6 return 문
 - return 문은 현재 실행 중인 메서드를 종료하고 호출한 메서드로 되돌아간다.
 - 메서드의 구현부{}를 작성할 때, 제일 먼저 해야하는 일이 매개변수의 값이 적절한 것인지 확인하는 것이다.
+
 ### 6.3.7 JVM 메모리 구조
+- 1) 메서드 영역
+  - 클래스 데이터가 저장된다
+  - static 변수와 static 함수가 이 영역에 저장된다.
+- 2) 힙 영역
+  - 이 영역에 인스턴스가 생성된다.
+  - 인스턴스 변수와 함수가 생성되는 공간.
+- 3) 호출 스택
+  - 메서드의 작업에 필요한 메모리 공간을 제공한다.
+  - 지역변수, 매개변수, 연산의 중간 결과등을 저장하는 공간.
+  - 메서드가 호출되면, 호출 스택에 호출된 메서드를 위한 메모리가 할당되고 메서드가 작업을 마치면 할당되었던 메모리 공간은 반환되어 비워진다. 
 ### 6.3.8 기본형 매개변수와 참조형 매개변수
+- 기본형 매개변수: readonly
+```java
+class Test {
+    public static void main(String[] args) {
+        int x = 10;
+        System.out.println(x);
+        change(x);
+        System.out.println(x);
+    }
+
+    static void change(int x) {
+        x = 1000;
+        System.out.println(x);
+    }
+}
+```
+- 참조형 매개변수: read and write
+```java
+class Data {
+    int x;
+}
+
+class Test {
+    public static void main(String[] args) {
+        Data d = new Data();
+        d.x = 10;
+        System.out.println(d.x);
+        change(d);
+        System.out.println(d.x);
+    }
+
+    static void change(Data d) {
+        d.x = 1000;
+        System.out.println(d.x);
+    }
+}
+```
+
 ### 6.3.9 참조형 반환타입
+```java
+class Data {
+    int x;
+    int y;
+}
+
+class Test {
+    public static void main(String[] args) {
+        Data d = new Data();
+        d.x = 10;
+        d.y = 20;
+        System.out.printf("d.x : %d, d.y : %d %n", d.x, d.y);
+        Data d2 = copy(d);
+        System.out.printf("d2.x: %d, d2.y: %d %n", d2.x, d2.y);
+    }
+
+    static Data copy(Data d) {
+        Data nd = new Data();
+        nd.x = d.x;
+        nd.y = d.y;
+        return nd;
+    }
+}
+```
+
 ### 6.3.10 재귀호출
+- 메서드 내부에서 메서드 자신을 다시 호출하는 것을 "재귀호출"이라 한다.
+- 재귀호출이 가능한 이유는, 호출된 메서드는 "값에 의한 호출(call by value)"를 통해 원래의 값이 아닌 복사된 값으로 작업하게 때문에 호출한 메서드와 관계없이 독립적인 작업 수행이 가능하다.
+- 자바의 모든 메서드는 call by value 방식으로 인자를 전달한다.
+- Java에서 참조형 매개변수를 갖는 메서드도 Call by Value 방식으로 호출된다. 이때 객체 자체가 아닌 객체를 가리키는 참조값의 복사본이 전달된다. 따라서 호출자와 피호출자는 동일한 객체에 접근할 수 있어 객체의 내부 상태 변경은 공유된다. 그러나 참조변수 자체는 각각 독립적이므로, Call by Reference와는 다르다.
+```java
+class Data {
+    int value;
+
+    Data(int value) {
+        this.value = value;
+    }
+}
+
+public class Main {
+    static void change(Data data) {
+        data = new Data(100);
+    }
+
+    public static void main(String[] args) {
+        Data original = new Data(10);
+
+        change(original);
+
+        System.out.println(original.value);
+    }
+}
+```
+- call by value VS call by refernce
+  - call by value: 전달하고자하는 값을 복사하여 매개변수에 직접 할당하는 방식으로 값을 전달
+  - call by reference: 전다랗고자하는 값을 가리키는 주소값을 매개변수에 할당하는 방식으로 값을 전달
+```
+class Node {
+    int value;
+    Node next;
+
+    Node(int value) {
+        this.value = value;
+    }
+}
+
+public class Main {
+
+    static void printNodes(Node node) {
+        if (node == null) return;
+
+        System.out.println(node.value);
+
+        printNodes(node.next);
+    }
+
+    public static void main(String[] args) {
+        Node first = new Node(10);
+        Node second = new Node(20);
+        Node third = new Node(30);
+
+        first.next = second;
+        second.next = third;
+
+        printNodes(first);
+    }
+}
+```
 ### 6.3.11 클래스 메서드(static메서드)와 인스턴스 메서드
 ### 6.3.12 클래스 멤버와 인스턴스 멤버간의 참조와 호출
 
