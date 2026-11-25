@@ -3,32 +3,17 @@ package javabasic.chapter07.packageandimport;
 import java.util.Arrays;
 import java.util.Scanner;
 
-class Test {
-    public static void main(String[] args) {
-        Point3D p3 = new Point3D();
-        System.out.printf("x: %d, y: %d, z: %d ", p3.x, p3.y, p3.z);
-    }
-}
+final class Singleton {
+    private static Singleton s = new Singleton();
 
-class Point {
-    int x = 10;
-    int y = 20;
-
-    Point(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
-
-class Point3D extends Point {
-    int z = 30;
-
-    Point3D() {
-        this(100, 200, 300);
+    private Singleton() {
+        // ...
     }
 
-    Point3D(int x, int y, int z) {
-        super(x, y);
-        this.z = z;
+    public static Singleton getInstance() {
+        if (s == null)
+            s = new Singleton();
+
+        return s;
     }
 }

@@ -116,7 +116,7 @@ class Point3D extends Point {
 ### 7.3.2 패키지 선언
 - 클래스명과 구분을 위해 소문자로 명명 하는 것이 원칙이다.
 - 자바에서는 패키지가 없을 경우 기본 패키지인 'unnamed package'에 포함된다.
-```
+```java
 package 패키지명;
 ```
 - 패키지 단위로 컴파일 하기
@@ -136,8 +136,179 @@ java -cp ~/dev/standardOfJava javabasic.chapter07.packageandimport.Test
 # 2) ~/.zshrc 아래에 추가
 export CLASSPATH=.:$HOME/dev/standardOfJava
 ```
-## 7.4 제어자 
+
+### 7.3.3 import문
+- 소스코드를 작성할 때 다른 패키지의 클래스를 사용하려면 패키지명이 포함된 클래스 이름을 사용해야 한다.
+- import문으로 사용하고자 하는 클래스의 패키지를 미리 명시해주면 소스코드에 사용되는 클래스이름에서 패키지명은 생략할 수 있다.
+- 컴파일 시에 컴파일러는 import문을 통해 소스파일에 사용된 클래스들의 패키지를 알아 낸 다음, 모든 클래스이름 앞에 패키지명을 붙여 준다.
+
+### 7.3.4 import문의 선언
+- 일반적인 소스파일(*.java)의 구성
+  - 1) package 문
+  - 2) import 문
+  - 3) 클래스 선언
+- 한 패키지에서 여러 클래스를 사용하는 경우 "패키지명.*" 과 같이 사용할 수 있으나, '*'를 사용하는 것이 하위 패키지의 클래스까지 포함하는 것은 아니므로 주의해야한다. 예를 들어 아래와 같다.
+```java
+import java.util.*
+import java.text.*
+import java.* //이 문장이 위의 두 문장을 대체할 수 없다.
+```
+- java.lang은 매우 빈번히 사용되는 중요한 클래스들이 속한 패키지이기 때문에 따로 import 문으로 지정하지 않아도 된다. - 소스 파일에 묵시적으로 import java.lang을 한다.
+
+### 7.3.5 static import
+- import 문을 사용하면 클래스의 패키지명을 생략할 수 있는 것과 같이 static import문을 사용하면 static멤버를 호출할 때 클래스 이름을 생략할 수 있다.
+```java
+import static java.lang.System.out;
+import static java.lang.Math.*; 
+
+class StaticImportEx1 {
+    public static void main(String[] args) {
+        // System.out.println(Math.random());
+        out.println(random());
+
+        // System.out.println("Math.PI :"+Math.PI)
+        out.println("Math.PI :"+PI);
+    }
+}
+```
+
+
+## 7.4 제어자
+### 7.4.1 제어자란? 
+- 제어자는 클래스, 변수 또는 메서드의 선언부에 함께 사용되어 부가적인 의미를 부여한다.
+- 제어자의 종류
+  - 접근 제어자: public, protected, default, private
+  - 그 외: static, final, abstract, native, transientm synchronized, volatile, strictfp
+
+### 7.4.2 static - 클래스의, 공통적인
+- static이 사용될 수 있는 곳: 멤버변수, 메서드, 초기화 블럭
+- static 멤버변수
+  - 모든 인스턴스에 공통적으로 사용되는 클래스변수.
+  - 인스턴스를 생성하지 않아도 사용가능.
+  - 클래스가 메모리에 로드 될 때 생성된다.
+- static 메서드
+  - 인스턴스를 생성하지 않아도 호출가능. static 메서드 내에서는 인스턴스 멤버들을 사용할 수 없다.
+
+### 7.4.3 final - 마지막의 변경될 수 없는
+- final 사용될 수 있는 곳: 클래스, 메서드, 멤버변수, 지역변수
+- final 클래스
+  - 상속으로 확장할 수 없는 클래스
+  - 주로 생성자가 private
+- final 메서드
+  - 오버라이딩 할 수없는 메서드
+- final 멤버변수, 지역변수
+  - 재할당 할 수 없는 상수 변수
+- 생성자를 이용한 final멤버 변수의 초기화
+  - final 변수를 생성자 맥락에서 초기화함으로써, 각각의 인스턴스가 서로 다른 final 변수를 생성할 수 있게 하는 구조
+```java
+class Card {
+    final int NUMBER;
+    final String KIND;
+    static int width = 100;
+    static int height = 250;
+
+    Card(String kind, int num) {
+        KIND = kind;
+        NUMBER = num;
+    }
+
+    Card() {
+        this("HEART", 1);
+    }
+
+    public String toString() {
+        return KIND + " " + NUMBER;
+    }
+}
+
+class FinalCardTest {
+    public static void main(String[] args) {
+        Card c = new Card("HEART", 10);
+        // c.NUMBER = 5; //에러
+        System.out.println(c.KIND);
+        System.out.println(c.NUMBER);
+        System.out.println(c.toString());
+    }
+}
+```
+### 7.4.4 abstract - 추상의 미완성의
+- abstract가 사용될 수 있는 곳: 클래스, 메서드
+- abstract 클래스: 추상 메서드를 갖는 클래스
+- abstract 메서드: 선언만 되고, 구현부는 작성하지 않은 추상 메서드
+- abstract 클래스를 상속 받아서, 일부의 원하는 메서드만 오버라이딩해도 된다는 장점이 있다. 만약 이 클래스가 없다면 아무런 내용도 없는 메서드를 잔뜩 오버랑딩해야한다. 
+
+### 7.4.5 접근 제어자(access modifier)
+- 접근 제어자가 사용될 수 있는 곳 - 클래스, 멤버변수, 메서드, 생성자
+- 접근 제어자 종류
+
+| 제어자 | 같은클래스 | 같은패키지 | 자손클래스 | 전체 |
+| :--- | :--- | :--- | :--- | :--- |
+| public    | o | o | o | o |
+| protected | o | o | o | x |
+| default   | o | o | x | x |
+| private   | o | x | x | x |
+
+- 접근 제어가를 이용한 캡슐화
+  - 외부로부터 데이터를 보호
+  - 외부에는 불필요한, 내부적으로만 사용되는 부분을 감추기 위함
+
+- 생성자와 접근 제어자
+  - 보통 클래스의 접근 제어자와 생성자의 접근제어자는 동일하나, 다르게 정의할 수도 있다.
+  - 생성자의 접근 제어자를 private으로 지정하면, 이 클래스를 외부에서 생성해서 사용할 수 없다. 하지만 클래스 내부적으로 생성한 인스턴스를 반환하는 public static 메서드를 정의해주면 이 경우에도 클래스를 외부에서 사용할 수 있게 된다. 아래는 그 예시이다.
+```java
+final class Singleton {
+    private static Singleton s = new Singleton();
+
+    private Singleton() {
+        // ...
+    }
+
+    public static Singleton getInstance() {
+        if (s == null)
+            s = new Singleton();
+
+        return s;
+    }
+}
+```
+
+### 7.4.6 제어자(modifier)의 조합
+
+| 대상 | 사용가능한 제어자 |
+|:---|:---|
+| 클래스  | public, default, final, abstract |
+| 메서드  | 모든접근제어자, static, final, abstract|
+| 멤버변수 | 모든접근제어자, static, final |
+| 지역변수 | final |
+
+- 제어자를 조합해서 사용할 때 주의 사항
+  - 메서드에 static, abstract 동시 사용 불가
+    - static은 몸통이 있는 메서드만 사용가능
+  - 클래스에 final, abstract 동시 사용 불가
+    - final은 확장 불가를 의미하고, abstarct는 확장 필수를 의미하므로 의미 충돌
+  - abstract 메서드의 접근제어가가 private일 수 없다.
+    - abstract는 자손에게 상속 되어 구현되야하기 때문
+  - 메서드에 private과 final을 같이 사용할 필요는 없다.
+    - 접근 제어자가 final인 메서드는 오버라이딩할 수 없기 때문
+
 ## 7.5 다형성
+
+### 7.5.1 다형성이란? 
+- 조상클래스 타입의 참조변수로 자손클래스의 인스턴스를 참조할 수 있도록 한것
+```java
+class Tv {
+    boolean power;
+    int channel;
+
+    void power() { power = !power; }
+    void channelUp() { ++channel; }
+    void channelDown() { --channel; }
+}
+```
+### 7.5.2 다형성이란? 
+### 7.5.1 다형성이란? 
+### 7.5.1 다형성이란? 
+
 ## 7.6 추상클래스
 ## 7.7 인터페이스
 ## 7.8 내부클래스
