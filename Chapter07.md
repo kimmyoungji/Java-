@@ -295,17 +295,133 @@ final class Singleton {
 
 ### 7.5.1 다형성이란? 
 - 조상클래스 타입의 참조변수로 자손클래스의 인스턴스를 참조할 수 있도록 한것
-```java
-class Tv {
-    boolean power;
-    int channel;
 
-    void power() { power = !power; }
-    void channelUp() { ++channel; }
-    void channelDown() { --channel; }
+### 7.5.2 참조변수의 형변환
+- 자식클래스 -> 부모클래스 형변환 명시 필요. 반대는 불필요
+- 형변환은 참조변수의 타입을 변환하는 것이지 인스턴스를 변화하는 것은 아니기 때문에 참조변수의 형변환은 인스턴스에 아무런 영향을 미치지 않는다. 단지 참조변수의 형변환을 통해서, 참조하고 있는 인스턴스에서 사용할 수 있는 멤버의 범위(개수)를 조절하는 것뿐이다.
+- 자식클래스의 인스턴스를 조상클래스 참조변수에 담을 수 있지만, 반대는 불가능
+
+
+### 7.5.3 instanceof 연산자
+- 어떤 타입에 대한 instanceof 연산의 결과가 true라는 것은 검사한 타입으로 형변환이 가능하다는 것을 의미한다.
+
+### 7.5.4 참조변수와 인스턴스의 연결
+- 부모의 멤버 변수를 재정의한 인스턴스의 경우 해당 변수는 인스턴스를 참조하는 참조 변수의 형태에 따라 값이 달라진다. 부모 클래스 형의 참조 변수에 의해 인스턴스 참조될 경우 부모 변수를 가져온다.
+- 부모의 메서드를 오버라이딩한 인스턴스의 경우 해당 메서드는 인스턴스를 참조하는 참조 변수의 형태에 상관없이 항상 오버라이딩된 메서드를 가져온다.
+- 참조변수의 타입에 따라 결과가 달라지는 경우는 조상 클래스의 멤버변수와 같은 이름의 멤버변수를 자손 클래스에 중복해서 정의한 경우뿐이다.
+
+### 7.5.5 매개변수의 다형성
+### 7.5.6 여러 종류의 객체를 배열로 다루기
+```java
+
+class Product {
+    int price;
+    int bonusPoint;
+
+    Product(int price) {
+        this.price = price;
+        this.bonusPoint = (int) (price / 10.0);
+    }
+
+    Product() {
+        price = 0;
+        bonusPoint = 0;
+    }
+}
+
+class Tv extends Product {
+    Tv() {
+        super(100);
+    }
+
+    public String toString() {
+        return "Tv";
+    }
+}
+
+class Computer extends Product {
+    Computer() {
+        super(200);
+    }
+
+    public String toString() {
+        return "Computer";
+    }
+}
+
+class Audio extends Product {
+    Audio() {
+        super(50);
+    }
+
+    public String toString() {
+        return "Audio";
+    }
+}
+
+class Buyer {
+    int money = 1000;
+    int bonusPoint = 0;
+    Vector item = new Vector(); // 내부적으로 Object 배열을 갖는다.
+
+    void buy(Product p) {
+        if (money < p.price) {
+            System.out.println("short of money..");
+            return;
+        }
+
+        money -= p.price;
+        bonusPoint += p.bonusPoint;
+        item.add(p);
+        System.out.println("you've purchased: " + p);
+    }
+
+    void refund(Product p) {
+        if (item.remove(p)) {
+            money += p.price;
+            bonusPoint -= p.bonusPoint;
+            System.out.println("you've refunded: " + p);
+        } else {
+            System.out.println("you haven't prurchased : " + p);
+        }
+    }
+
+    void summary() {
+        int sum = 0;
+        String itemList = "";
+
+        if (item.isEmpty()) {
+            System.out.println("nothing purchased");
+            return;
+        }
+
+        for (int i = 0; i < item.size(); i++) {
+            Product p = (Product) item.get(i);
+            sum += p.price;
+            itemList += (i == 0) ? "" + p : ", " + p;
+        }
+        System.out.println("spending total: " + sum);
+        System.out.println("Purchased List: " + itemList);
+    }
+}
+
+class PolyArgumentTest3 {
+    public static void main(String[] args) {
+        Buyer b = new Buyer();
+        Tv tv = new Tv();
+        Computer computer = new Computer();
+        Audio audio = new Audio();
+
+        b.buy(tv);
+        b.buy(computer);
+        b.buy(audio);
+        b.refund(tv);
+        b.summary();
+    }
 }
 ```
-### 7.5.2 다형성이란? 
+
+
 ### 7.5.1 다형성이란? 
 ### 7.5.1 다형성이란? 
 
